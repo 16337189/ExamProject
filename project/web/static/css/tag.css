@@ -1,0 +1,31 @@
+.tag_box{
+    margin-top:1%;
+    margin-left:8%;
+}
+
+.tag-group{
+    display:inline;
+    height:20px;
+    width:48px;
+    margin:2px 2px;
+    background-color:#949494;
+    border-style:solid;
+    border-color:#000000;
+    border-width:1px;
+}
+
+form.tag_write_box{
+    display:inline;
+    margin:2px 2px;
+}
+
+input.tag_write_box{
+    height:20px;
+    width:48px;
+}
+
+button.tag_write_button{
+    height:20px;
+    width:20px;
+    padding:2px 2px;
+}

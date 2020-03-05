@@ -2,46 +2,79 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ request.session.user_name }}</title>
-    <link href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>个人页面</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/user.css">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/index">首页</a></li>
-                    <li class="active"><a href="/works">作品</a></li>
-                    <li class="active"><a href="/">辩论</a></li>
-                    <li class="active"><a href="/">问题</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="/user">{{ request.session.user_name }}</a></li>
-                    <li class="active"><a href="/logout">注销</a></li>
-                </ul>
+    <div class="top_menu">
+        <ul class="link_menu">
+            <li class="item"><a class="jump" href="/home/">首页</a></li>
+            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
+            <li class="item"><a class="jump" href="/question/">问题</a></li>
+        </ul>
+        <form class="search_menu" action="/search/" method="get">
+            {% csrf_token %}
+            <input class="search_box" type="text" name="key">
+            <button type="submit">搜索</button>
+        </form>
+        <ul class="user_menu">
+            {% if request.session.is_login %}
+                <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
+                <li class="item"><a class="jump" href="/write/work/">推荐作品</a></li>
+                <li class="item"><a class="jump" href="/write/disscussion/">发起讨论</a></li>
+                <li class="item"><a class="jump" href="/write/question/">提出问题</a></li>
+                <li class="item"><a class="jump" href="/logout/">注销</a></li>
+            {% else %}
+                <li class="item"><a class="jump" href="/signin/">登录</a></li>
+                <li class="item"><a class="jump" href="/login/">注册</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="collection_lists">
+        <div class="collection_list">
+            <div class="list_title">
+                收藏的作品
             </div>
+            {% for work in collection.work_list %}
+                <div class="collection-group">
+                    <a class="collection_jump" href="../work/{{work.id}}/">{{work.name}}</a>
+                </div>
+            {% empty %}
+                <div class="collection-group">
+                    无收藏
+                </div>
+            {% endfor %}
         </div>
-    </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="row">
-                    3
-                </div>
-                <div class="row">
-                    4
-                </div>
+        <div class="collection_list">
+            <div class="list_title">
+                收藏的讨论
             </div>
-            <div class="col-md-4">
-                <div class="row">
-                    辩论
+            {% for disscussion in collection.disscussion_list %}
+                <div class="collection-group">
+                    <a class="collection_jump" href="../disscussion/{{disscussion.id}}/">{{disscussion.name}}</a>
                 </div>
-                <div class="row">
-                    问题
+            {% empty %}
+                <div class="collection-group">
+                    无收藏
                 </div>
+            {% endfor %}
+        </div>
+        <div class="collection_list">
+            <div class="list_title">
+                收藏的问题
             </div>
+            {% for question in collection.question_list %}
+                <div class="collection-group">
+                    <a class="collection_jump" href="../question/{{question.id}}/">{{question.name}}</a>
+                </div>
+            {% empty %}
+                <div class="collection-group">
+                    无收藏
+                </div>
+            {% endfor %}
         </div>
     </div>
 </body>

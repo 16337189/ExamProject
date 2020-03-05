@@ -1,0 +1,31 @@
+form.write_content_box{
+    float:left;
+    width:60%;
+    margin-top:1%;
+    margin-left:6%;
+}
+
+textarea.write_textarea_2{
+    height:120px;
+    width:80%;
+}
+
+.comment_list{
+    float:left;
+    width:80%;
+    margin-top:1%;
+    margin-left:6%;
+}
+
+.comment-group{
+    margin-top:1%;
+    margin-left:3%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.comment-row{
+    margin-top:1%;
+    margin-left:3%;
+}

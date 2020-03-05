@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{question.name}}</title>
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/question.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/comment.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/collection.css">
+</head>
+<body>
+    <div class="top_menu">
+        <ul class="link_menu">
+            <li class="item"><a class="jump" href="/home/">首页</a></li>
+            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
+            <li class="item"><a class="jump" href="/question/">问题</a></li>
+        </ul>
+        <ul class="user_menu">
+            {% if request.session.is_login %}
+                <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
+                <li class="item"><a class="jump" href="/write/question/">提出问题</a></li>
+                <li class="item"><a class="jump" href="/logout/">注销</a></li>
+            {% else %}
+                <li class="item"><a class="jump" href="/signin/">登录</a></li>
+                <li class="item"><a class="jump" href="/login/">注册</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class='question_box'>
+        <div class="question_title">
+            <div>{{question.name}}</div>
+        </div>
+        <div class="question_content">
+            <div>{{question.content}}</div>
+        </div>
+        <div class="user_date">
+            <div>作者：{{question.user_name}}</div>
+            <div>时间：{{question.date}}</div>
+        </div>
+        {% if request.session.is_login %}
+            <form class="collection_box_2" action="./" method="POST">
+                {% csrf_token %}
+                <button type='submit' class="{{collection}}" name="collection_update">收藏</button>
+            </form>
+        {% endif %}
+    </div>
+    {% if request.session.is_login %}
+        <form class='write_content_box' action="/question/{{question.id}}/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="content">评论：</label><br>
+                <textarea class="write_textarea_2" name='content' id="content" required></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="comment_update">提交</button>
+            </div>
+        </form>
+    {% endif %}
+    <<div class="comment_list">
+        {% for comment in comment_list %}
+            <div class="comment-group">
+                <div class="comment-row">
+                    用户：{{comment.user_name}}
+                </div>
+                <div class="comment-row">
+                    {{comment.content}}
+                </div>
+                <div class="comment-row">
+                    时间：{{comment.date}}
+                </div>
+            </div>
+        {% empty %}
+            无评论
+        {% endfor %}
+    </div>>
+</body>
+</html>

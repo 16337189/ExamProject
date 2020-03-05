@@ -1,0 +1,59 @@
+.work_list{
+    float:left;
+    height:600px;
+    width:65%;
+    margin-top:6%;
+    margin-left:3%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.discuss_list{
+    float:right;
+    height:200px;
+    width:20%;
+    margin-top:6%;
+    margin-right:3%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.question_list{
+    float:right;
+    height:200px;
+    width:20%;
+    margin-top:3%;
+    margin-right:3%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.list_title{
+    width:99.5%;
+    margin-top:0%;
+    margin-left:0%;
+    padding:5px 3px;
+    background-color:#949494;
+    color:#FFFFFF;
+    font-size:22px;
+}
+
+.list-group{
+    margin-top:1%;
+    margin-left:3%;
+}
+
+a.list_jump_1{
+    font-size:24px;
+    color:#000000;
+    text-decoration:none;
+}
+
+a.list_jump_2{
+    font-size:18px;
+    color:#000000;
+    text-decoration:none;
+}

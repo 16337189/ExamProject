@@ -2,49 +2,46 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>作品安利</title>
-    <link href="../../static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>作品推荐编写页</title>
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/work.css">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/index">首页</a></li>
-                    <li class="active"><a href="/works">作品</a></li>
-                    <li class="active"><a href="/">辩论</a></li>
-                    <li class="active"><a href="/">问题</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="/user">{{ request.session.user_name }}</a></li>
-                    <li class="active"><a href="/logout">注销</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        <form class='form-write_work' action="/write/work/" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_workname">作品名：</label>
-                <input type="text" name='workname' class="form-control" id="id_workname" placeholder="作品名" autofocus required>
-            </div>
-            <div class="form-group">
-                <label for="id_date">年份：</label>
-                <input type="text" name='date' class="form-control" id="id_date" placeholder="年份" required>
-            </div>
-            <div class="form-group">
-                <label for="id_carrier">载体：</label>
-                <input type="text" name='carrier' class="form-control" id="id_carrier" placeholder="载体" required>
-            </div>
-            <div class="form-group">
-                <label for="id_introduction">介绍：</label>
-                <textarea name='introduction' class="form-control" id="id_introduction" placeholder="介绍" required rows="5"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary pull-right">提交</button>
-      </form>
+    <div class="top_menu">
+        <ul class="link_menu">
+            <li class="item"><a class="jump" href="/home/">首页</a></li>
+            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
+            <li class="item"><a class="jump" href="/question/">问题</a></li>
+        </ul>
+        <ul class="user_menu">
+            {% if request.session.is_login %}
+                <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
+                <li class="item"><a class="jump" href="/logout/">注销</a></li>
+            {% else %}
+                <li class="item"><a class="jump" href="/signin/">登录</a></li>
+                <li class="item"><a class="jump" href="/login/">注册</a></li>
+            {% endif %}
+        </ul>
     </div>
+    <form class='write_work_box' action="/write/work/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">作品名：</label><br>
+            <input type="text" class="write_text" name='name' id="name" placeholder="作品名" autofocus required>
+        </div>
+        <div class="form-group">
+            <label for="date">时间：</label><br>
+            <input type="text" class="write_text" name='date' id="date" placeholder="时间" required>
+        </div>
+        <div class="form-group">
+            <label for="introduction">介绍：</label><br>
+            <textarea class="write_textarea_1" name='introduction' id="introduction" placeholder="介绍" required></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit">提交</button>
+        </div>
+    </form>
 </body>
 </html>

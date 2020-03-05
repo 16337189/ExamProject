@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>作品页</title>
+    <title>讨论页</title>
 
     <link rel="stylesheet" type="text/css" href="../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/work.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/disscussion.css">
 </head>
 <body>
     <div class="top_menu">
@@ -15,7 +15,7 @@
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
-        <form class="search_menu" action="/search/search_key/work/" method="post">
+        <form class="search_menu" action="/search/search_key/disscussion/" method="post">
             {% csrf_token %}
             <input class="search_box" type="text" name="search_key">
             <button type="submit">搜索</button>
@@ -23,7 +23,7 @@
         <ul class="user_menu">
             {% if request.session.is_login %}
                 <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
-                <li class="item"><a class="jump" href="/write/work/">推荐作品</a></li>
+                <li class="item"><a class="jump" href="/write/disscussion/">发起讨论</a></li>
                 <li class="item"><a class="jump" href="/logout/">注销</a></li>
             {% else %}
                 <li class="item"><a class="jump" href="/signin/">登录</a></li>
@@ -31,19 +31,16 @@
             {% endif %}
         </ul>
     </div>
-    <div class="work_list">
-        {% for work in work_list %}
-            <div class="work-group">
-                <a class="work_jump" href="./{{work.id}}/">{{work.name}}</a>
+    <div class="disscussion_list">
+        {% for disscussion in disscussion_list %}
+            <div class="disscussion-group">
+                <a class="disscussion_jump" href="./{{disscussion.id}}/">{{disscussion.name}}</a>
             </div>
         {% empty %}
-            <div class="work-group">
-                无作品
+            <div class="disscussion-group">
+                无讨论
             </div>
         {% endfor %}
-    </div>
-    <div class="screening_list">
-        2
     </div>
 </body>
 </html>

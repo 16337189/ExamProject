@@ -1,0 +1,34 @@
+.result_list{
+    float:left;
+    height:480px;
+    width:65%;
+    margin-top:6%;
+    margin-left:3%;
+    background-color:#d6d6d6;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.tag_list{
+    float:right;
+    height:200px;
+    width:20%;
+    margin-top:6%;
+    margin-right:3%;
+    background-color:#d6d6d6;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.result-group{
+    margin-top:1%;
+    margin-left:3%;
+}
+
+a.result_jump{
+    font-size:24px;
+    color:#000000;
+    text-decoration:none;
+}

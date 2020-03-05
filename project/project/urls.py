@@ -15,18 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from web import views as web_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('index/', web_views.index),
-    path('login/', web_views.login),
-    path('register/', web_views.register),
+    path("home/", web_views.home),
+    path("signin/", web_views.signin),
+    path("login/", web_views.login),
     path('logout/', web_views.logout),
     path('user/', web_views.user),
-    path('works/', web_views.works),
+    path('work/', web_views.works),
     path('write/work/', web_views.write_work),
-    path('works/<str:id>', web_views.work),
+    path('work/<int:id>/', web_views.work),
+    path('disscussion/', web_views.disscussions),
+    path('write/disscussion/', web_views.write_disscussion),
+    path('disscussion/<int:id>/', web_views.disscussion),
+    path('question/', web_views.questions),
+    path('write/question/', web_views.write_question),
+    path('question/<int:id>/', web_views.question),
+    path('search/<str:key>/<str:tag>/', web_views.search),
 ]

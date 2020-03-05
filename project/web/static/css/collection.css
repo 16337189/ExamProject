@@ -1,0 +1,21 @@
+form.collection_box_1{
+    margin-top:1%;
+    margin-left:8%;
+}
+
+form.collection_box_2{
+    margin-top:1%;
+    margin-left:2%;
+}
+
+.collection_button_1{
+    padding:10px 22px;
+    font-size:22px;
+    background-color:#fff038;
+}
+
+.collection_button_2{
+    padding:10px 22px;
+    font-size:22px;
+    background-color:#bcbba9;
+}

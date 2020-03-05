@@ -1,0 +1,27 @@
+.score_box{
+    float:right;
+    height:180px;
+    width:20%;
+    margin-top:-22%;
+    margin-right:4%;
+    border-style:solid;
+    border-color:#e0da00;
+    border-width:3px;
+}
+
+.avg_score{
+    margin-top:10%;
+    margin-left:15%;
+    font-size:30px
+}
+
+.user_score{
+    margin-top:8%;
+    margin-left:25%;
+    font-size:20px
+}
+
+form.write_score_box{
+    margin-top:8%;
+    margin-left:15%;
+}

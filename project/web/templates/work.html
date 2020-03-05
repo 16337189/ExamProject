@@ -2,38 +2,122 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{name}}</title>
-    <link href="../static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{{work.name}}</title>
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/work.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/score.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/comment.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/collection.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/tag.css">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container-fluid">
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/index">首页</a></li>
-                    <li class="active"><a href="/works">作品</a></li>
-                    <li class="active"><a href="/">辩论</a></li>
-                    <li class="active"><a href="/">问题</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                {% if request.session.is_login %}
-                    <li class="active"><a href="/user">{{ request.session.user_name }}</a></li>
-                    <li class="active"><a href="/logout">注销</a></li>
-                {% else %}
-                    <li class="active"><a href="/login">登录</a></li>
-                    <li class="active"><a href="/register">注册</a></li>
-                {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        <p>作品名：{{name}}</p>
-        <p>年份：{{date}}</p>
-        <p>载体：{{carrier}}</p>
-        <p>简介：{{introduction}}</p>
+    <div class="top_menu">
+        <ul class="link_menu">
+            <li class="item"><a class="jump" href="/home/">首页</a></li>
+            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
+            <li class="item"><a class="jump" href="/question/">问题</a></li>
+        </ul>
+        <ul class="user_menu">
+            {% if request.session.is_login %}
+                <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
+                <li class="item"><a class="jump" href="/write/work/">推荐作品</a></li>
+                <li class="item"><a class="jump" href="/logout/">注销</a></li>
+            {% else %}
+                <li class="item"><a class="jump" href="/signin/">登录</a></li>
+                <li class="item"><a class="jump" href="/login/">注册</a></li>
+            {% endif %}
+        </ul>
     </div>
+    <div class='work_box'>
+        <div class="form-group">
+            <div>作品名：</div><br>
+            <div>{{work.name}}</div><br>
+        </div>
+        <div class="form-group">
+            <div>时间：</div><br>
+            <div>{{work.date}}</div><br>
+        </div>
+        <div class="form-group">
+            <div>介绍：</div><br>
+            <div>{{work.introduction}}</div><br>
+        </div>
+        <div class="tag_box">
+            {% for entry in tag.tag_list %}
+                <div class="tag-group">
+                    {{entry.name}} ({{entry.count}})
+                </div>
+            {% endfor %}
+            {% if request.session.is_login %}
+            {% if tag.unwritten %}
+                <form class="tag_write_box" action="./" method="POST">
+                    {% csrf_token %}
+                    <input type="text" class="tag_write_box" name='tag_name' required>
+                    <button type='submit' class="tag_write_button" name="tag_update">+</button>
+                </form>
+            {% endif %}
+            {% endif %}
+        </div>
+        {% if request.session.is_login %}
+            <form class="collection_box_1" action="./" method="POST">
+                {% csrf_token %}
+                <button type='submit' class="{{collection}}" name="collection_update">收藏</button>
+            </form>
+        {% endif %}
+        <div class="score_box">
+            <div class="avg_score">
+                {% if score.avg_s %}
+                    总评分：{{score.avg_s}}
+                {% else %}
+                    无评分
+                {% endif %}
+            </div>
+            <div class="user_score">
+                {% if score.user_s %}
+                    自评分：{{score.user_s}}
+                {% else %}
+                    未评分
+                {% endif %}
+            </div>
+            {% if request.session.is_login %}
+                <form class="write_score_box" action="/work/{{work.id}}/" method="post">
+                    {% csrf_token %}
+                    <label for="score">评分：</label>
+                    <input type="number" name='score' id="score"  min="0" max="10" placeholder="0~10" required>
+                    <button type="submit" name="score_update">提交</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% if request.session.is_login %}
+        <form class='write_content_box' action="/work/{{work.id}}/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="content">评论：</label><br>
+                <textarea class="write_textarea_2" name='content' id="content" required></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="comment_update">提交</button>
+            </div>
+        </form>
+    {% endif %}
+    <<div class="comment_list">
+        {% for comment in comment_list %}
+            <div class="comment-group">
+                <div class="comment-row">
+                    用户：{{comment.user_name}}
+                </div>
+                <div class="comment-row">
+                    {{comment.content}}
+                </div>
+                <div class="comment-row">
+                    时间：{{comment.date}}
+                </div>
+            </div>
+        {% empty %}
+            无评论
+        {% endfor %}
+    </div>>
 </body>
 </html>

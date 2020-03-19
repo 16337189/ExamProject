@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <title>作品页</title>
 
-    <link rel="stylesheet" type="text/css" href="../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/work.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/work.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
-        <form class="search_menu" action="/search/search_key/work/" method="post">
+        <form class="search_menu" action="/search/search_key/work/all/" method="post">
             {% csrf_token %}
             <input class="search_box" type="text" name="search_key">
             <button type="submit">搜索</button>
@@ -34,7 +34,7 @@
     <div class="work_list">
         {% for work in work_list %}
             <div class="work-group">
-                <a class="work_jump" href="./{{work.id}}/">{{work.name}}</a>
+                <a class="work_jump" href="../detail/{{work.id}}/">{{work.name}}</a>
             </div>
         {% empty %}
             <div class="work-group">
@@ -43,7 +43,9 @@
         {% endfor %}
     </div>
     <div class="screening_list">
-        2
+        {% for entry in tag_list %}
+            <div class="screening-group"><a class="screening_jump" href="/work/{{entry.name}}/">{{entry.name}}</a></div>
+        {% endfor %}
     </div>
 </body>
 </html>

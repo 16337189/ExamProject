@@ -10,7 +10,18 @@
     border-width:3px;
 }
 
-.tag_list{
+.result-group{
+    margin-top:1%;
+    margin-left:3%;
+}
+
+a.result_jump{
+    font-size:24px;
+    color:#000000;
+    text-decoration:none;
+}
+
+.search_list{
     float:right;
     height:200px;
     width:20%;
@@ -22,13 +33,21 @@
     border-width:3px;
 }
 
-.result-group{
-    margin-top:1%;
-    margin-left:3%;
+.tag-group{
+    display:inline;
+    margin-top:2%;
+    margin-left:2%;
 }
 
-a.result_jump{
-    font-size:24px;
+a.tag_jump{
+    font-size:18px;
     color:#000000;
     text-decoration:none;
+}
+
+.light{
+    margin:10px 0 ;
+    border-style:solid;
+    border-color:#949494;
+    border-width:1px;
 }

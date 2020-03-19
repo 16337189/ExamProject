@@ -14,18 +14,18 @@
     <meta charset="UTF-8">
     <title>搜索结果</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../../../static/css/search.css">
+    <link rel="stylesheet" type="text/css" href="../../../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../../static/css/search.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
-        <form class="search_menu" action="/search/search_key/work/" method="post">
+        <form class="search_menu" action="/search/search_key/work/all/" method="post">
             {% csrf_token %}
             <input class="search_box" type="text" name="search_key">
             <button type="submit">搜索</button>
@@ -43,7 +43,11 @@
     <div class="result_list">
         {% for entry in list %}
             <div class="result-group">
-                <a class="result_jump" href="/{{search_key.tag}}/{{entry.id}}/">{{entry.name}}</a>
+                {% if search_key.w_p == "work"%}
+                    <a class="result_jump" href="/work/detail/{{entry.id}}/">{{entry.name}}</a>
+                {% else %}
+                    <a class="result_jump" href="/{{search_key.w_p}}/{{entry.id}}/">{{entry.name}}</a>
+                {% endif %}
             </div>
         {% empty %}
             <div class="result-group">
@@ -51,8 +55,18 @@
             </div>
         {% endfor %}
     </div>
-    <div class="tag_list">
-        2
+    <div class="search_list">
+        <div class="w_p">
+            <div class="tag-group"><a class="tag_jump" href="/search/{{search_key.key}}/work/{{search_key.tag}}/">作品</a></div>
+            <div class="tag-group"><a class="tag_jump" href="/search/{{search_key.key}}/disscussion/{{search_key.tag}}/">讨论</a></div>
+            <div class="tag-group"><a class="tag_jump" href="/search/{{search_key.key}}/question/{{search_key.tag}}/">问题</a></div>
+        </div>
+        <div class="light"></div>
+        <div class="tag_list">
+            {% for entry in tag_list %}
+                <div class="tag-group"><a class="tag_jump" href="/search/{{search_key.key}}/{{search_key.w_p}}/{{entry.name}}/">{{entry.name}}</a></div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

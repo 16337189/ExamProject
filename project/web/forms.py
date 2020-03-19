@@ -30,3 +30,6 @@ class SearchForm(forms.Form):
 
 class TagForm(forms.Form):
     tag_name = forms.CharField()
+
+class DeleteForm(forms.Form):
+    delete_id = forms.IntegerField()

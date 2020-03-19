@@ -131,15 +131,33 @@ def user(request):
     return render(request, 'user.html', {"collection":collection})
 
 #作品总页
-def works(request):
-    all_work = models.Work.objects.all()
+def works(request,tag):
     work_list = []
+    if tag == "none":
+        all_work = models.Work.objects.all()
+    else:
+        list_1 = models.Work.objects.all()
+        list_2 = models.Tag.objects.filter(name = tag)
+        for entry in list_1:
+            new_entry = {}
+            new_entry["id"] = entry.id
+            new_entry["name"] = entry.name
+            if list_2.filter(wid = entry.id).exists():
+                work_list.append(new_entry)
+        all_work = []
     for entry in all_work:
         new_entry = {}
         new_entry["id"] = entry.id
         new_entry["name"] = entry.name
         work_list.append(new_entry)
-    return render(request, 'works.html', {"work_list":work_list})
+
+    tag_list = []
+    all_tag = models.Tag.objects.all().values("name").distinct()
+    for entry in all_tag:
+        new_entry = {}
+        new_entry["name"] = entry["name"]
+        tag_list.append(new_entry)
+    return render(request, 'works.html', {"work_list":work_list, "tag_list":tag_list})
 
 #作品推荐编写页
 def write_work(request):
@@ -152,7 +170,7 @@ def write_work(request):
             date = work_form.cleaned_data["date"]
             introduction = work_form.cleaned_data["introduction"]
             work = models.Work.objects.create(name = name, date = date, introduction = introduction)
-            return redirect('/work/'+str(work.pk))
+            return redirect('/work/detail/'+str(work.pk))
     return render(request, 'write_work.html')
 
 #作品页
@@ -193,11 +211,21 @@ def work(request,id):
                     models.Tag.objects.get(wid = db_work.id, uid = request.session.get('user_id',None))
                 except:
                     models.Tag.objects.create(wid = db_work.id, uid = request.session.get('user_id',None), name = tag_name, main = False)
+        if "comment_delete" in request.POST:
+            delete_form = forms.DeleteForm(request.POST)
+            print(delete_form.is_valid())
+            if delete_form.is_valid():
+                delete_id = delete_form.cleaned_data["delete_id"]
+                delete_coment = models.Comment.objects.get(id = delete_id)
+                delete_coment.delete = True
+                delete_coment.save()
 
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "work_comment", wpid = db_work.id, delete = False)
     for entry in all_comment:
         new_entry = {}
+        new_entry["id"] = entry.id
+        new_entry["user_id"] = entry.uid
         new_entry["user_name"] = models.User.objects.get(id = entry.uid).name
         new_entry["content"] = entry.content
         new_entry["date"] = entry.date
@@ -223,18 +251,38 @@ def work(request,id):
 
     tag_list = []
     all_tag = models.Tag.objects.filter(wid = db_work.id).values('name').annotate(count_n=Count("name"))
+    choose_work_id = {}
     for entry in all_tag:
         new_entry = {}
         new_entry["name"] = entry["name"]
         new_entry["count"] = entry["count_n"]
         tag_list.append(new_entry)
+        choose_tag = models.Tag.objects.filter(name = entry["name"]).values('wid').distinct()
+        for entry_2 in choose_tag:
+            if entry_2["wid"] != db_work.id:
+                if entry_2["wid"] not in choose_work_id.keys():
+                    choose_work_id[entry_2["wid"]] = 1
+                else:
+                    choose_work_id[entry_2["wid"]] = choose_work_id[entry_2["wid"]] + 1
     tag = {"unwritten":True, "tag_list":tag_list}
     try:
         models.Tag.objects.get(wid = db_work.id, uid = request.session.get('user_id',None))
         tag["unwritten"] = False
     except:
         tag["unwritten"] = True
-    return render(request, 'work.html', {"work":work, "comment_list":comment_list, "score":score, "collection":collection, "tag":tag})
+
+    choose_work_id = sorted(choose_work_id.items(), key = lambda kv:kv[1])
+    choose_work_list = []
+    counter = 0
+    for entry in choose_work_id:
+        if counter >= 5:
+            break
+        new_entry = {}
+        new_entry["id"] = entry[0]
+        new_entry["name"] = models.Work.objects.get(id = entry[0]).name
+        choose_work_list.append(new_entry)
+        counter = counter + 1
+    return render(request, 'work.html', {"work":work, "comment_list":comment_list, "score":score, "collection":collection, "tag":tag, "choose_work_list":choose_work_list})
 
 #讨论总页
 def disscussions(request):
@@ -281,11 +329,21 @@ def disscussion(request,id):
                 models.Collection.objects.get(tag = "disscussion_collection", wpid = db_disscussion.id, uid = request.session.get('user_id',None)).delete()
             except:
                 models.Collection.objects.create(tag = "disscussion_collection", wpid = db_disscussion.id, uid = request.session.get('user_id',None))
+        if "comment_delete" in request.POST:
+            delete_form = forms.DeleteForm(request.POST)
+            print(delete_form.is_valid())
+            if delete_form.is_valid():
+                delete_id = delete_form.cleaned_data["delete_id"]
+                delete_coment = models.Comment.objects.get(id = delete_id)
+                delete_coment.delete = True
+                delete_coment.save()
 
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "disscussion_comment", wpid = db_disscussion.id, delete = False)
     for entry in all_comment:
         new_entry = {}
+        new_entry["id"] = entry.id
+        new_entry["user_id"] = entry.uid
         new_entry["user_name"] = models.User.objects.get(id = entry.uid).name
         new_entry["content"] = entry.content
         new_entry["date"] = entry.date
@@ -346,11 +404,21 @@ def question(request,id):
                 models.Collection.objects.get(tag = "question_collection", wpid = db_question.id, uid = request.session.get('user_id',None)).delete()
             except:
                 models.Collection.objects.create(tag = "question_collection", wpid = db_question.id, uid = request.session.get('user_id',None))
+        if "comment_delete" in request.POST:
+            delete_form = forms.DeleteForm(request.POST)
+            print(delete_form.is_valid())
+            if delete_form.is_valid():
+                delete_id = delete_form.cleaned_data["delete_id"]
+                delete_coment = models.Comment.objects.get(id = delete_id)
+                delete_coment.delete = True
+                delete_coment.save()
 
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "question_comment", wpid = db_question.id, delete = False)
     for entry in all_comment:
         new_entry = {}
+        new_entry["id"] = entry.id
+        new_entry["user_id"] = entry.uid
         new_entry["user_name"] = models.User.objects.get(id = entry.uid).name
         new_entry["content"] = entry.content
         new_entry["date"] = entry.date
@@ -366,21 +434,39 @@ def question(request,id):
     return render(request, 'question.html', {"question":question, "comment_list":comment_list, "collection":collection})
 
 #搜索页
-def search(request,key,tag):
-    search_key = {"key":key, "tag":tag}
+def search(request,key,w_p,tag):
+    search_key = {"key":key, "w_p":w_p, "tag":tag}
     if search_key["key"] == "search_key":
         search_form = forms.SearchForm(request.POST)
         if search_form.is_valid():
             search_key["key"] = search_form.cleaned_data["search_key"]
 
     list = []
-    if search_key["tag"] == "work":
-        all = models.Work.objects.filter(name__contains = search_key["key"])
+    if search_key["w_p"] == "work":
+        if search_key["tag"] == "all":
+            all = models.Work.objects.filter(name__contains = search_key["key"])
+        else:
+            list_1 = models.Work.objects.filter(name__contains = search_key["key"])
+            list_2 = models.Tag.objects.filter(name = search_key["tag"])
+            for entry in list_1:
+                new_entry = {}
+                new_entry["id"] = entry.id
+                new_entry["name"] = entry.name
+                if list_2.filter(wid = entry.id).exists():
+                    list.append(new_entry)
+            all = []
     else:
-        all = models.Post.objects.filter(name__contains = search_key["key"], tag = search_key["tag"])
+        all = models.Post.objects.filter(name__contains = search_key["key"], tag = search_key["w_p"])
     for entry in all:
         new_entry = {}
         new_entry["id"] = entry.id
         new_entry["name"] = entry.name
         list.append(new_entry)
-    return render(request, 'search.html',{"search_key":search_key, "list":list})
+
+    tag_list = []
+    all_tag = models.Tag.objects.all().values("name").distinct()
+    for entry in all_tag:
+        new_entry = {}
+        new_entry["name"] = entry["name"]
+        tag_list.append(new_entry)
+    return render(request, 'search.html',{"search_key":search_key, "list":list, "tag_list":tag_list})

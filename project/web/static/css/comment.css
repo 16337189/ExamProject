@@ -14,6 +14,7 @@ textarea.write_textarea_2{
     float:left;
     width:80%;
     margin-top:1%;
+    margin-bottom:3%;
     margin-left:6%;
 }
 
@@ -28,4 +29,17 @@ textarea.write_textarea_2{
 .comment-row{
     margin-top:1%;
     margin-left:3%;
+}
+
+form.comment_delete_box{
+    margin-top:-1%;
+    margin-left:95%;
+}
+
+input.hidden_id{
+    display:none;
+}
+
+button.comment_delete_botton{
+
 }

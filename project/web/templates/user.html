@@ -11,11 +11,11 @@
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
-        <form class="search_menu" action="/search/" method="get">
+        <form class="search_menu" action="/search/search_key/work/all/" method="get">
             {% csrf_token %}
             <input class="search_box" type="text" name="key">
             <button type="submit">搜索</button>
@@ -40,7 +40,7 @@
             </div>
             {% for work in collection.work_list %}
                 <div class="collection-group">
-                    <a class="collection_jump" href="../work/{{work.id}}/">{{work.name}}</a>
+                    <a class="collection_jump" href="../work/detail/{{work.id}}/">{{work.name}}</a>
                 </div>
             {% empty %}
                 <div class="collection-group">

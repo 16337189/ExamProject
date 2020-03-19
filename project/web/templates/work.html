@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <title>{{work.name}}</title>
 
-    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/work.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/score.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/comment.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/collection.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/tag.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/work.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/score.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/comment.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/collection.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/tag.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/">作品</a></li>
+            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -90,6 +90,18 @@
             {% endif %}
         </div>
     </div>
+    <div class="choose_work_list">
+        <div class="choose_title">相似推荐</div>
+        {% for entry in choose_work_list %}
+            <div class="list-group">
+                <a class="list_jump" href="../{{entry.id}}/">{{entry.name}}</a>
+            </div>
+        {% empty %}
+            <div class="list-group">
+                无
+            </div>
+        {% endfor %}
+    </div>
     {% if request.session.is_login %}
         <form class='write_content_box' action="/work/{{work.id}}/" method="post">
             {% csrf_token %}
@@ -114,9 +126,18 @@
                 <div class="comment-row">
                     时间：{{comment.date}}
                 </div>
+                {% if comment.user_id == request.session.user_id%}
+                    <form class="comment_delete_box" action="./" method="POST">
+                        {% csrf_token %}
+                        <input type="number" class="hidden_id" name='delete_id' value="{{comment.id}}">
+                        <button type='submit' class="comment_delete_botton" name="comment_delete">删除</button>
+                    </form>
+                {% endif %}
             </div>
         {% empty %}
-            无评论
+            <div class="comment-row">
+                无评论
+            </div>
         {% endfor %}
     </div>>
 </body>

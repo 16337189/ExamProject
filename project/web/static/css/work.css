@@ -31,6 +31,18 @@ a.work_jump{
     border-width:3px;
 }
 
+.screening-group{
+    display:inline;
+    margin-top:2%;
+    margin-left:2%;
+}
+
+a.screening_jump{
+    font-size:18px;
+    color:#000000;
+    text-decoration:none;
+}
+
 form.write_work_box{
     float:left;
     height:85%;
@@ -56,8 +68,38 @@ textarea.write_textarea_1{
 .work_box{
     float:left;
     height:40%;
-    width:80%;
+    width:60%;
     margin-top:6%;
     margin-left:6%;
 }
 
+.choose_work_list{
+    float:left;
+    width:16%;
+    height:200px;
+    margin-top:10%;
+    margin-left:2%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.choose_title{
+    width:99%;
+    margin-top:0%;
+    margin-left:0%;
+    padding:5px 3px;
+    background-color:#949494;
+    font-size:18px;
+}
+
+.list-group{
+    margin-top:1%;
+    margin-left:3%;
+}
+
+a.list_jump{
+    font-size:20px;
+    color:#000000;
+    text-decoration:none;
+}

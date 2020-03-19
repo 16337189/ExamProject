@@ -8,6 +8,7 @@ import random
 
 #主页
 def home(request):
+    #作品列表
     new_list = list(models.Work.objects.all())
     all_work = random.sample(new_list,10 if len(new_list) > 10 else len(new_list))
     work_list = []
@@ -17,6 +18,7 @@ def home(request):
         new_entry["name"] = entry.name
         work_list.append(new_entry)
 
+    #讨论列表
     new_list = list(models.Post.objects.filter(tag = "disscussion"))
     all_disscussion = random.sample(new_list,5 if len(new_list) > 5 else len(new_list))
     disscussion_list = []
@@ -26,6 +28,7 @@ def home(request):
         new_entry["name"] = entry.name
         disscussion_list.append(new_entry)
 
+    #问题列表
     new_list = list(models.Post.objects.filter(tag = "question"))
     all_question = random.sample(new_list,5 if len(new_list) > 5 else len(new_list))
     question_list = []
@@ -40,6 +43,7 @@ def home(request):
 
 #登录
 def signin(request):
+    #判断是否登录
     if request.session.get('is_login',None):
         return redirect('/home')
     if request.method == "POST":
@@ -65,6 +69,7 @@ def signin(request):
 #注册
 def login(request):
     message = ""
+    #判断是否登录
     if request.session.get('is_login',None):
         return redirect('/home')
     if request.method == "POST":
@@ -93,6 +98,7 @@ def login(request):
 
 #注销
 def logout(request):
+    #判断是否登录
     if not request.session.get('is_login', None):
         return redirect("/home")
     request.session.flush()
@@ -100,9 +106,11 @@ def logout(request):
 
 #用户页
 def user(request):
+    #判断是否登录
     if not request.session.get('is_login',None):
         return redirect('/home')
 
+    #收藏作品列表
     all_work = models.Collection.objects.filter(tag = "work_collection", uid = request.session.get('user_id',None))
     work_list = []
     for entry in all_work:
@@ -111,6 +119,7 @@ def user(request):
         new_entry["name"] = models.Work.objects.get(id = entry.wpid).name
         work_list.append(new_entry)
 
+    #收藏讨论列表
     all_disscussion = models.Collection.objects.filter(tag = "disscussion_collection", uid = request.session.get('user_id',None))
     disscussion_list = []
     for entry in all_disscussion:
@@ -119,6 +128,7 @@ def user(request):
         new_entry["name"] = models.Post.objects.get(id = entry.wpid).name
         disscussion_list.append(new_entry)
 
+    #收藏问题列表
     all_question = models.Collection.objects.filter(tag = "question_collection", uid = request.session.get('user_id',None))
     question_list = []
     for entry in all_question:
@@ -133,9 +143,11 @@ def user(request):
 #作品总页
 def works(request,tag):
     work_list = []
+    #判断是否使用标签筛选
     if tag == "none":
         all_work = models.Work.objects.all()
     else:
+        #通过标签筛选作品
         list_1 = models.Work.objects.all()
         list_2 = models.Tag.objects.filter(name = tag)
         for entry in list_1:
@@ -145,12 +157,14 @@ def works(request,tag):
             if list_2.filter(wid = entry.id).exists():
                 work_list.append(new_entry)
         all_work = []
+    #作品列表
     for entry in all_work:
         new_entry = {}
         new_entry["id"] = entry.id
         new_entry["name"] = entry.name
         work_list.append(new_entry)
 
+    #标签列表
     tag_list = []
     all_tag = models.Tag.objects.all().values("name").distinct()
     for entry in all_tag:
@@ -161,6 +175,7 @@ def works(request,tag):
 
 #作品推荐编写页
 def write_work(request):
+    #判断是否登录
     if not request.session.get('is_login',None):
         return redirect('/home')
     if request.method == "POST":
@@ -175,6 +190,7 @@ def write_work(request):
 
 #作品页
 def work(request,id):
+    #获取作品数据
     db_work = models.Work.objects.get(pk = id)
     work = {}
     work["id"] = db_work.id
@@ -182,12 +198,15 @@ def work(request,id):
     work["date"] = db_work.date
     work["introduction"] = db_work.introduction
 
+    #判断表单是否提交
     if request.method == "POST" and request.session.get('is_login',None):
+        #评论提交
         if "comment_update" in request.POST:
             comment_form = forms.CommentForm(request.POST)
             if comment_form.is_valid():
                 content = comment_form.cleaned_data["content"]
                 models.Comment.objects.create(tag = "work_comment", wpid = db_work.id, uid = request.session.get('user_id',None), content = content, delete = False)
+        #评分提交
         if "score_update" in request.POST:
             score_form = forms.ScoreForm(request.POST)
             if score_form.is_valid():
@@ -198,11 +217,13 @@ def work(request,id):
                     new_score.save()
                 except:
                     models.Score.objects.create(wid = db_work.id, uid = request.session.get('user_id',None), name = "总分", score = score, main = False)
+        #收藏提交
         if "collection_update" in request.POST:
             try:
                 models.Collection.objects.get(tag = "work_collection", wpid = db_work.id, uid = request.session.get('user_id',None)).delete()
             except:
                 models.Collection.objects.create(tag = "work_collection", wpid = db_work.id, uid = request.session.get('user_id',None))
+        #标签提交
         if "tag_update" in request.POST:
             tag_form = forms.TagForm(request.POST)
             if tag_form.is_valid():
@@ -211,6 +232,7 @@ def work(request,id):
                     models.Tag.objects.get(wid = db_work.id, uid = request.session.get('user_id',None))
                 except:
                     models.Tag.objects.create(wid = db_work.id, uid = request.session.get('user_id',None), name = tag_name, main = False)
+        #评论删除
         if "comment_delete" in request.POST:
             delete_form = forms.DeleteForm(request.POST)
             print(delete_form.is_valid())
@@ -220,6 +242,7 @@ def work(request,id):
                 delete_coment.delete = True
                 delete_coment.save()
 
+    #评论列表
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "work_comment", wpid = db_work.id, delete = False)
     for entry in all_comment:
@@ -231,6 +254,7 @@ def work(request,id):
         new_entry["date"] = entry.date
         comment_list.append(new_entry)
 
+    #评分计算
     score = {}
     try:
         score["avg_s"] = models.Score.objects.filter(wid = db_work.id, name = "总分").aggregate(avg_s=Avg("score"))["avg_s"]
@@ -241,6 +265,7 @@ def work(request,id):
     except:
         score["user_s"] = False
 
+    #收藏判断
     collection = ""
     if request.session.get('is_login',None):
         try:
@@ -249,6 +274,7 @@ def work(request,id):
         except:
             collection = "collection_button_2"
 
+    #标签列表
     tag_list = []
     all_tag = models.Tag.objects.filter(wid = db_work.id).values('name').annotate(count_n=Count("name"))
     choose_work_id = {}
@@ -271,6 +297,7 @@ def work(request,id):
     except:
         tag["unwritten"] = True
 
+    #相似作品推荐列表
     choose_work_id = sorted(choose_work_id.items(), key = lambda kv:kv[1])
     choose_work_list = []
     counter = 0
@@ -297,6 +324,7 @@ def disscussions(request):
 
 #讨论编写页
 def write_disscussion(request):
+    #判断是否登录
     if not request.session.get('is_login',None):
         return redirect('/home')
     if request.method == "POST":
@@ -310,6 +338,7 @@ def write_disscussion(request):
 
 #讨论页
 def disscussion(request,id):
+    #获取讨论数据
     db_disscussion = models.Post.objects.get(pk = id)
     disscussion = {}
     disscussion["id"] = db_disscussion.id
@@ -318,17 +347,21 @@ def disscussion(request,id):
     disscussion["user_name"] =  models.User.objects.get(id = db_disscussion.uid).name
     disscussion["date"] = db_disscussion.date
 
+    #判断表单是否提交
     if request.method == "POST" and request.session.get('is_login',None):
+        #评论提交
         if "comment_update" in request.POST:
             comment_form = forms.CommentForm(request.POST)
             if comment_form.is_valid():
                 content = comment_form.cleaned_data["content"]
                 models.Comment.objects.create(tag = "disscussion_comment", wpid = db_disscussion.id, uid = request.session.get('user_id',None), content = content, delete = False)
+        #收藏提交
         if "collection_update" in request.POST:
             try:
                 models.Collection.objects.get(tag = "disscussion_collection", wpid = db_disscussion.id, uid = request.session.get('user_id',None)).delete()
             except:
                 models.Collection.objects.create(tag = "disscussion_collection", wpid = db_disscussion.id, uid = request.session.get('user_id',None))
+        #评论删除
         if "comment_delete" in request.POST:
             delete_form = forms.DeleteForm(request.POST)
             print(delete_form.is_valid())
@@ -338,6 +371,7 @@ def disscussion(request,id):
                 delete_coment.delete = True
                 delete_coment.save()
 
+    #评论列表
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "disscussion_comment", wpid = db_disscussion.id, delete = False)
     for entry in all_comment:
@@ -349,7 +383,7 @@ def disscussion(request,id):
         new_entry["date"] = entry.date
         comment_list.append(new_entry)
 
-
+    #收藏判断
     collection = ""
     if request.session.get('is_login',None):
         try:
@@ -372,6 +406,7 @@ def questions(request):
 
 #问题编写页
 def write_question(request):
+    #判断是否登录
     if not request.session.get('is_login',None):
         return redirect('/home')
     if request.method == "POST":
@@ -385,6 +420,7 @@ def write_question(request):
 
 #问题页
 def question(request,id):
+    #获取问题数据
     db_question = models.Post.objects.get(pk = id)
     question = {}
     question["id"] = db_question.id
@@ -393,17 +429,21 @@ def question(request,id):
     question["user_name"] =  models.User.objects.get(id = db_question.uid).name
     question["date"] = db_question.date
 
+    #判断表单是否提交
     if request.method == "POST" and request.session.get('is_login',None):
+        #评论提交
         if "comment_update" in request.POST:
             comment_form = forms.CommentForm(request.POST)
             if comment_form.is_valid():
                 content = comment_form.cleaned_data["content"]
                 models.Comment.objects.create(tag = "question_comment", wpid = db_question.id, uid = request.session.get('user_id',None), content = content, delete = False)
+        #收藏提交
         if "collection_update" in request.POST:
             try:
                 models.Collection.objects.get(tag = "question_collection", wpid = db_question.id, uid = request.session.get('user_id',None)).delete()
             except:
                 models.Collection.objects.create(tag = "question_collection", wpid = db_question.id, uid = request.session.get('user_id',None))
+        #评论删除
         if "comment_delete" in request.POST:
             delete_form = forms.DeleteForm(request.POST)
             print(delete_form.is_valid())
@@ -413,6 +453,7 @@ def question(request,id):
                 delete_coment.delete = True
                 delete_coment.save()
 
+    #评论列表
     comment_list = []
     all_comment = models.Comment.objects.filter(tag = "question_comment", wpid = db_question.id, delete = False)
     for entry in all_comment:
@@ -424,6 +465,7 @@ def question(request,id):
         new_entry["date"] = entry.date
         comment_list.append(new_entry)
 
+    #收藏列表
     collection = ""
     if request.session.get('is_login',None):
         try:
@@ -436,12 +478,14 @@ def question(request,id):
 #搜索页
 def search(request,key,w_p,tag):
     search_key = {"key":key, "w_p":w_p, "tag":tag}
+    #确定搜索关键字
     if search_key["key"] == "search_key":
         search_form = forms.SearchForm(request.POST)
         if search_form.is_valid():
             search_key["key"] = search_form.cleaned_data["search_key"]
 
     list = []
+    #确定帖子类型和标签
     if search_key["w_p"] == "work":
         if search_key["tag"] == "all":
             all = models.Work.objects.filter(name__contains = search_key["key"])
@@ -463,6 +507,7 @@ def search(request,key,w_p,tag):
         new_entry["name"] = entry.name
         list.append(new_entry)
 
+    #标签列表
     tag_list = []
     all_tag = models.Tag.objects.all().values("name").distinct()
     for entry in all_tag:

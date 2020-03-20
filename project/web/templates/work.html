@@ -81,7 +81,7 @@
                 {% endif %}
             </div>
             {% if request.session.is_login %}
-                <form class="write_score_box" action="/work/{{work.id}}/" method="post">
+                <form class="write_score_box" action="./" method="post">
                     {% csrf_token %}
                     <label for="score">评分：</label>
                     <input type="number" name='score' id="score"  min="0" max="10" placeholder="0~10" required>
@@ -103,7 +103,7 @@
         {% endfor %}
     </div>
     {% if request.session.is_login %}
-        <form class='write_content_box' action="/work/{{work.id}}/" method="post">
+        <form class='write_content_box' action="./" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="content">评论：</label><br>

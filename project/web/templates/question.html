@@ -47,7 +47,7 @@
         {% endif %}
     </div>
     {% if request.session.is_login %}
-        <form class='write_content_box' action="/question/{{question.id}}/" method="post">
+        <form class='write_content_box' action="./" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="content">评论：</label><br>

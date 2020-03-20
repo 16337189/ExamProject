@@ -15,7 +15,7 @@
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
-        <form class="search_menu" action="/search/search_key/question/all" method="post">
+        <form class="search_menu" action="/search/search_key/question/all/" method="post">
             {% csrf_token %}
             <input class="search_box" type="text" name="search_key">
             <button type="submit">搜索</button>

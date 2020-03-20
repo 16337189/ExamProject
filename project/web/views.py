@@ -488,24 +488,56 @@ def search(request,key,w_p,tag):
     #确定帖子类型和标签
     if search_key["w_p"] == "work":
         if search_key["tag"] == "all":
-            all = models.Work.objects.filter(name__contains = search_key["key"])
-        else:
-            list_1 = models.Work.objects.filter(name__contains = search_key["key"])
-            list_2 = models.Tag.objects.filter(name = search_key["tag"])
-            for entry in list_1:
+            all_1 = models.Work.objects.filter(name__contains = search_key["key"])
+            all_2 = models.Work.objects.filter(introduction__contains = search_key["key"])
+            check = []
+            for entry in all_1:
+                check.append(entry.id)
                 new_entry = {}
                 new_entry["id"] = entry.id
                 new_entry["name"] = entry.name
-                if list_2.filter(wid = entry.id).exists():
+                list.append(new_entry)
+            for entry in all_2:
+                new_entry = {}
+                new_entry["id"] = entry.id
+                new_entry["name"] = entry.name
+                if entry.id not in check:
                     list.append(new_entry)
-            all = []
+        else:
+            list_1 = models.Work.objects.filter(name__contains = search_key["key"])
+            list_2 = models.Work.objects.filter(introduction__contains = search_key["key"])
+            list_3 = models.Tag.objects.filter(name = search_key["tag"])
+            check = []
+            for entry in list_1:
+                check.append(entry.id)
+                new_entry = {}
+                new_entry["id"] = entry.id
+                new_entry["name"] = entry.name
+                if list_3.filter(wid = entry.id).exists():
+                    list.append(new_entry)
+            for entry in list_2:
+                new_entry = {}
+                new_entry["id"] = entry.id
+                new_entry["name"] = entry.name
+                if list_3.filter(wid = entry.id).exists():
+                    if entry.id not in check:
+                        list.append(new_entry)
     else:
-        all = models.Post.objects.filter(name__contains = search_key["key"], tag = search_key["w_p"])
-    for entry in all:
-        new_entry = {}
-        new_entry["id"] = entry.id
-        new_entry["name"] = entry.name
-        list.append(new_entry)
+        all_1 = models.Post.objects.filter(name__contains = search_key["key"], tag = search_key["w_p"])
+        all_2 = models.Post.objects.filter(content__contains = search_key["key"], tag = search_key["w_p"])
+        check = []
+        for entry in all_1:
+            check.append(entry.id)
+            new_entry = {}
+            new_entry["id"] = entry.id
+            new_entry["name"] = entry.name
+            list.append(new_entry)
+        for entry in all_2:
+            new_entry = {}
+            new_entry["id"] = entry.id
+            new_entry["name"] = entry.name
+            if entry.id not in check:
+                list.append(new_entry)
 
     #标签列表
     tag_list = []

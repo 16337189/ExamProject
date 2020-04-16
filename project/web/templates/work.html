@@ -65,30 +65,47 @@
                 <button type='submit' class="{{collection}}" name="collection_update">收藏</button>
             </form>
         {% endif %}
-        <div class="score_box">
-            <div class="avg_score">
-                {% if score.avg_s %}
-                    总评分：{{score.avg_s}}
-                {% else %}
-                    无评分
-                {% endif %}
-            </div>
-            <div class="user_score">
-                {% if score.user_s %}
-                    自评分：{{score.user_s}}
-                {% else %}
-                    未评分
-                {% endif %}
-            </div>
-            {% if request.session.is_login %}
+        {% if request.session.is_login %}
+            <div class="score_box_2">
+                <div class="avg_score">
+                    {% if score.avg_s %}
+                        总评分：{{score.avg_s}}
+                    {% else %}
+                        无评分
+                    {% endif %}
+                </div>
+                <div class="user_score">
+                    {% if score.user_s %}
+                        自评分：{{score.user_s}}
+                    {% else %}
+                        未评分
+                    {% endif %}
+                </div>
                 <form class="write_score_box" action="./" method="post">
                     {% csrf_token %}
                     <label for="score">评分：</label>
                     <input type="number" name='score' id="score"  min="0" max="10" placeholder="0~10" required>
                     <button type="submit" name="score_update">提交</button>
                 </form>
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <div class="score_box_1">
+                <div class="avg_score">
+                    {% if score.avg_s %}
+                        总评分：{{score.avg_s}}
+                    {% else %}
+                        无评分
+                    {% endif %}
+                </div>
+                <div class="user_score">
+                    {% if score.user_s %}
+                        自评分：{{score.user_s}}
+                    {% else %}
+                        未评分
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
     </div>
     <div class="choose_work_list">
         <div class="choose_title">相似推荐</div>

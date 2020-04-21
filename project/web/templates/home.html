@@ -11,7 +11,7 @@
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -34,7 +34,7 @@
         <div class="list_title">作品</div>
         {% for work in example.work_list %}
             <div class="list-group">
-                <a class="list_jump_1" href="../work/detail/{{work.id}}/">{{work.name}}</a>
+                <a class="list_jump_1" href="/work/{{work.id}}/">{{work.name}}</a>
             </div>
         {% empty %}
             <div class="list-group">无</div>
@@ -44,7 +44,7 @@
         <div class="list_title">讨论</div>
         {% for disscussion in example.disscussion_list %}
             <div class="list-group">
-                <a class="list_jump_2" href="../disscussion/{{disscussion.id}}/">{{disscussion.name}}</a>
+                <a class="list_jump_2" href="/disscussion/{{disscussion.id}}/">{{disscussion.title}}</a>
             </div>
         {% empty %}
             <div class="list-group">无</div>
@@ -54,7 +54,7 @@
         <div class="list_title">问题</div>
         {% for question in example.question_list %}
             <div class="list-group">
-                <a class="list_jump_2" href="../question/{{question.id}}/">{{question.name}}</a>
+                <a class="list_jump_2" href="/question/{{question.id}}/">{{question.title}}</a>
             </div>
         {% empty %}
             <div class="list-group">无</div>

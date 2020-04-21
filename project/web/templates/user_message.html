@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>个人页面</title>
+    <title>私信页面</title>
 
-    <link rel="stylesheet" type="text/css" href="../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/user.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/user.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/message.css">
 </head>
 <body>
     <div class="top_menu">
@@ -33,15 +34,22 @@
             {% endif %}
         </ul>
     </div>
-    <div class="choose_work_list">
-        <div class="choose_title">推荐</div>
-        {% for entry in list %}
-            <div class="list-group">
-                <a class="list_jump" href="/work/{{entry.id}}/">{{entry.name}}</a>
+    <div class="message_list">
+        {% for message in message_list %}
+            <div class="message-group">
+                <div class="message-row">
+                    <a class="write_message_jump" href="/write/message/{{message.writter_id}}/">用户：{{message.writter_name}}</a>
+                </div>
+                <div class="message-row">
+                    {{message.content}}
+                </div>
+                <div class="message-row">
+                    时间：{{message.date}}
+                </div>
             </div>
         {% empty %}
-            <div class="list-group">
-                无
+            <div class="message-row">
+                无私信
             </div>
         {% endfor %}
     </div>

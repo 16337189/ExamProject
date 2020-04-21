@@ -1,0 +1,43 @@
+form.write_message_box{
+    float:left;
+    height:85%;
+    width:75%;
+    margin-top:7.5%;
+    margin-left:12.5%;
+}
+
+.form-group{
+    margin-top:1%;
+    margin-left:8%;
+}
+
+
+textarea.write_textarea_1{
+    height:220px;
+    width:80%;
+}
+
+.message_list{
+    float:left;
+    width:76%;
+    margin-top:6%;
+    margin-left:12%;
+}
+
+.message-group{
+    margin-top:1%;
+    margin-left:3%;
+    border-style:solid;
+    border-color:#949494;
+    border-width:3px;
+}
+
+.message-row{
+    margin-top:1%;
+    margin-left:3%;
+}
+
+a.write_message_jump{
+    color:#000000;
+    text-decoration:none;
+}

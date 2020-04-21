@@ -12,7 +12,8 @@ class LoginForm(forms.Form):
 
 class WorkForm(forms.Form):
     name = forms.CharField()
-    date = forms.CharField()
+    carry = forms.CharField()
+    year = forms.CharField()
     introduction = forms.CharField()
 
 class CommentForm(forms.Form):
@@ -22,7 +23,7 @@ class ScoreForm(forms.Form):
     score = forms.IntegerField()
 
 class PostForm(forms.Form):
-    name = forms.CharField()
+    title = forms.CharField()
     content = forms.CharField()
 
 class SearchForm(forms.Form):
@@ -33,3 +34,9 @@ class TagForm(forms.Form):
 
 class DeleteForm(forms.Form):
     delete_id = forms.IntegerField()
+
+class BestForm(forms.Form):
+    best_id = forms.IntegerField()
+
+class MessageForm(forms.Form):
+    message = forms.CharField()

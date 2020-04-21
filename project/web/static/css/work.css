@@ -31,7 +31,16 @@ a.work_jump{
     border-width:3px;
 }
 
-.screening-group{
+.screening_title{
+    width:97%;
+    margin-top:0%;
+    margin-left:0%;
+    padding:3px 5px;
+    background-color:#949494;
+    font-size:18px;
+}
+
+.screening-entry{
     display:inline;
     margin-top:2%;
     margin-left:2%;
@@ -51,9 +60,16 @@ form.write_work_box{
     margin-left:12.5%;
 }
 
-.form-group{
+.work_box-group_1{
     margin-top:1%;
     margin-left:8%;
+    font-size:28px;
+}
+
+.work_box-group_2{
+    margin-top:-1%;
+    margin-left:10%;
+    font-size:16px;
 }
 
 input.write_text{
@@ -73,11 +89,17 @@ textarea.write_textarea_1{
     margin-left:6%;
 }
 
+.user_date{
+    margin-top:2%;
+    margin-left:10%;
+    font-size:13px;
+}
+
 .choose_work_list{
     float:left;
     width:16%;
     height:200px;
-    margin-top:10%;
+    margin-top:6%;
     margin-left:2%;
     border-style:solid;
     border-color:#949494;

@@ -11,7 +11,7 @@
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -25,15 +25,19 @@
             {% endif %}
         </ul>
     </div>
-    <form class='write_work_box' action="/write/work/" method="post">
+    <form class='write_work_box' action="./" method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="name">作品名：</label><br>
             <input type="text" class="write_text" name='name' id="name" placeholder="作品名" autofocus required>
         </div>
         <div class="form-group">
-            <label for="date">时间：</label><br>
-            <input type="text" class="write_text" name='date' id="date" placeholder="时间" required>
+            <label for="carry">载体：</label><br>
+            <input type="text" class="write_text" name='carry' id="carry" placeholder="载体" required>
+        </div>
+        <div class="form-group">
+            <label for="year">年份：</label><br>
+            <input type="text" class="write_text" name='year' id="year" placeholder="年份" required>
         </div>
         <div class="form-group">
             <label for="introduction">介绍：</label><br>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>已发帖子页面</title>
+
+    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/user.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/written.css">
+</head>
+<body>
+    <div class="top_menu">
+        <ul class="link_menu">
+            <li class="item"><a class="jump" href="/home/">首页</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
+            <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
+            <li class="item"><a class="jump" href="/question/">问题</a></li>
+        </ul>
+        <form class="search_menu" action="/search/search_key/work/all/" method="get">
+            {% csrf_token %}
+            <input class="search_box" type="text" name="key">
+            <button type="submit">搜索</button>
+        </form>
+        <ul class="user_menu">
+            {% if request.session.is_login %}
+                <li class="item"><a class="jump" href="/user/">{{ request.session.user_name }}</a></li>
+                <li class="item"><a class="jump" href="/user/collection/">收藏列表</a></li>
+                <li class="item"><a class="jump" href="/user/post/">已发帖子</a></li>
+                <li class="item"><a class="jump" href="/user/message/">私信列表</a></li>
+                <li class="item"><a class="jump" href="/logout/">注销</a></li>
+            {% else %}
+                <li class="item"><a class="jump" href="/signin/">登录</a></li>
+                <li class="item"><a class="jump" href="/login/">注册</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="written_lists">
+        <div class="written_list">
+            <div class="list_title">
+                推荐的作品
+            </div>
+            {% for work in written.work_list %}
+                <div>
+                    <div class="written-group">
+                        <a class="written_jump" href="/work/{{work.id}}/">{{work.name}}</a>
+                    </div>
+                    <div class="rewrite-group">
+                        <a class="rewrite_jump" href="/rewrite/work/{{work.id}}/">重写</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="written-group">
+                    无推荐
+                </div>
+            {% endfor %}
+        </div>
+        <div class="written_list">
+            <div class="list_title">
+                发起的讨论
+            </div>
+            {% for disscussion in written.disscussion_list %}
+                <div>
+                    <div class="written-group">
+                        <a class="written_jump" href="/disscussion/{{disscussion.id}}/">{{disscussion.title}}</a>
+                    </div>
+                    <div class="rewrite-group">
+                        <a class="rewrite_jump" href="/rewrite/disscussion/{{disscussion.id}}/">重写</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="written-group">
+                    无讨论
+                </div>
+            {% endfor %}
+        </div>
+        <div class="written_list">
+            <div class="list_title">
+                提出的问题
+            </div>
+            {% for question in written.question_list %}
+                <div>
+                    <div class="written-group">
+                        <a class="written_jump" href="/question/{{question.id}}/">{{question.title}}</a>
+                    </div>
+                    <div class="rewrite-group">
+                        <a class="rewrite_jump" href="/rewrite/question/{{question.id}}/">重写</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="written-group">
+                    无问题
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

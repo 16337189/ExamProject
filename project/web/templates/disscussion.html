@@ -2,18 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>{{disscussion.name}}</title>
+    <title>{{disscussion.title}}</title>
 
     <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/disscussion.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/comment.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/collection.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/message.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -30,13 +31,17 @@
     </div>
     <div class='disscussion_box'>
         <div class="disscussion_title">
-            <div>{{disscussion.name}}</div>
+            <div>{{disscussion.title}}</div>
         </div>
         <div class="disscussion_content">
             <div>{{disscussion.content}}</div>
         </div>
         <div class="user_date">
-            <div>作者：{{disscussion.user_name}}</div>
+            {% if disscussion.writter_id != request.session.user_id and request.session.is_login %}
+                <a class="write_message_jump" href="/write/message/{{disscussion.writter_id}}/">作者：{{disscussion.writter_name}}</a>
+            {% else %}
+                <div>作者：{{disscussion.writter_name}}</div>
+            {% endif %}
             <div>时间：{{disscussion.date}}</div>
         </div>
         {% if request.session.is_login %}
@@ -62,7 +67,11 @@
         {% for comment in comment_list %}
             <div class="comment-group">
                 <div class="comment-row">
-                    用户：{{comment.user_name}}
+                    {% if comment.writter_id != request.session.user_id and request.session.is_login %}
+                        <a class="write_message_jump" href="/write/message/{{comment.writter_id}}/">用户：{{comment.writter_name}}</a>
+                    {% else %}
+                        用户：{{comment.writter_name}}
+                    {% endif %}
                 </div>
                 <div class="comment-row">
                     {{comment.content}}
@@ -70,7 +79,7 @@
                 <div class="comment-row">
                     时间：{{comment.date}}
                 </div>
-                {% if comment.user_id == request.session.user_id%}
+                {% if comment.writter_id == request.session.user_id%}
                     <form class="comment_delete_box" action="./" method="POST">
                         {% csrf_token %}
                         <input type="number" class="hidden_id" name='delete_id' value="{{comment.id}}">

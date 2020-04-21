@@ -18,6 +18,14 @@ textarea.write_textarea_2{
     margin-left:6%;
 }
 
+.best_comment{
+    margin-top:1%;
+    margin-left:3%;
+    border-style:solid;
+    border-color:#FF0000;
+    border-width:3px;
+}
+
 .comment-group{
     margin-top:1%;
     margin-left:3%;
@@ -31,15 +39,19 @@ textarea.write_textarea_2{
     margin-left:3%;
 }
 
+form.answer_update_box{
+    float:right;
+    margin-top:-2%;
+    margin-right:1%;
+}
+
 form.comment_delete_box{
-    margin-top:-1%;
-    margin-left:95%;
+    float:right;
+    margin-top:-2%;
+    margin-right:1%;
 }
 
 input.hidden_id{
     display:none;
 }
 
-button.comment_delete_botton{
-
-}

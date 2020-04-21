@@ -2,18 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>{{question.name}}</title>
+    <title>{{question.title}}</title>
 
     <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/question.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/comment.css">
     <link rel="stylesheet" type="text/css" href="../../static/css/collection.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/message.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -30,13 +31,17 @@
     </div>
     <div class='question_box'>
         <div class="question_title">
-            <div>{{question.name}}</div>
+            <div>{{question.title}}</div>
         </div>
         <div class="question_content">
             <div>{{question.content}}</div>
         </div>
         <div class="user_date">
-            <div>作者：{{question.user_name}}</div>
+            {% if question.writter_id != request.session.user_id and request.session.is_login %}
+                <a class="write_message_jump" href="/write/message/{{question.writter_id}}/">作者：{{question.writter_name}}</a>
+            {% else %}
+                <div>作者：{{question.writter_name}}</div>
+            {% endif %}
             <div>时间：{{question.date}}</div>
         </div>
         {% if request.session.is_login %}
@@ -59,10 +64,31 @@
         </form>
     {% endif %}
     <<div class="comment_list">
+        {% if best_comment %}
+            <div class="best_comment">
+                <div class="comment-row">
+                    {% if comment.writter_id != request.session.user_id and request.session.is_login %}
+                        <a class="write_message_jump" href="/write/message/{{comment.writter_id}}/">用户：{{comment.writter_name}}</a>
+                    {% else %}
+                        用户：{{comment.writter_name}}
+                    {% endif %}
+                </div>
+                <div class="comment-row">
+                    {{best_comment.content}}
+                </div>
+                <div class="comment-row">
+                    时间：{{best_comment.date}}
+                </div>
+            </div>
+        {% endif %}
         {% for comment in comment_list %}
             <div class="comment-group">
                 <div class="comment-row">
-                    用户：{{comment.user_name}}
+                    {% if post.writter_id != request.session.user_id and request.session.is_login %}
+                        <a class="write_message_jump" href="/write/message/{{comment.writter_id}}/">用户：{{comment.writter_name}}</a>
+                    {% else %}
+                        用户：{{comment.writter_name}}
+                    {% endif %}
                 </div>
                 <div class="comment-row">
                     {{comment.content}}
@@ -70,11 +96,18 @@
                 <div class="comment-row">
                     时间：{{comment.date}}
                 </div>
-                {% if comment.user_id == request.session.user_id%}
+                {% if comment.writter_id == request.session.user_id%}
                     <form class="comment_delete_box" action="./" method="POST">
                         {% csrf_token %}
                         <input type="number" class="hidden_id" name='delete_id' value="{{comment.id}}">
                         <button type='submit' class="comment_delete_botton" name="comment_delete">删除</button>
+                    </form>
+                {% endif %}
+                {% if question.writter_id == request.session.user_id%}
+                    <form class="answer_update_box" action="./" method="POST">
+                        {% csrf_token %}
+                        <input type="number" class="hidden_id" name='best_id' value="{{comment.id}}">
+                        <button type='submit' class="answer_update_botton" name="answer_update">最佳答案</button>
                     </form>
                 {% endif %}
             </div>

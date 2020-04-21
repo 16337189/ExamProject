@@ -10,12 +10,13 @@
     <link rel="stylesheet" type="text/css" href="../../../static/css/comment.css">
     <link rel="stylesheet" type="text/css" href="../../../static/css/collection.css">
     <link rel="stylesheet" type="text/css" href="../../../static/css/tag.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/message.css">
 </head>
 <body>
     <div class="top_menu">
         <ul class="link_menu">
             <li class="item"><a class="jump" href="/home/">首页</a></li>
-            <li class="item"><a class="jump" href="/work/none/">作品</a></li>
+            <li class="item"><a class="jump" href="/works/all/all/all/date/">作品</a></li>
             <li class="item"><a class="jump" href="/disscussion/">讨论</a></li>
             <li class="item"><a class="jump" href="/question/">问题</a></li>
         </ul>
@@ -31,33 +32,40 @@
         </ul>
     </div>
     <div class='work_box'>
-        <div class="form-group">
-            <div>作品名：</div><br>
-            <div>{{work.name}}</div><br>
+        <div class="work_box-group_1">
+            <div class="">{{work.name}}</div><br>
         </div>
-        <div class="form-group">
-            <div>时间：</div><br>
-            <div>{{work.date}}</div><br>
+        <div class="work_box-group_2">
+            <div>载体：{{work.carry}}</div><br>
         </div>
-        <div class="form-group">
+        <div class="work_box-group_2">
+            <div>年份：{{work.year}}</div><br>
+        </div>
+        <div class="work_box-group_2">
             <div>介绍：</div><br>
             <div>{{work.introduction}}</div><br>
         </div>
         <div class="tag_box">
-            {% for entry in tag.tag_list %}
+            {% for entry in tag_list %}
                 <div class="tag-group">
                     {{entry.name}} ({{entry.count}})
                 </div>
             {% endfor %}
             {% if request.session.is_login %}
-            {% if tag.unwritten %}
                 <form class="tag_write_box" action="./" method="POST">
                     {% csrf_token %}
                     <input type="text" class="tag_write_box" name='tag_name' required>
                     <button type='submit' class="tag_write_button" name="tag_update">+</button>
                 </form>
             {% endif %}
+        </div>
+        <div class="user_date">
+            {% if post.writter_id != request.session.user_id and request.session.is_login %}
+                <a class="write_message_jump" href="/write/message/{{post.writter_id}}/">推荐者：{{post.writter_name}}</a>
+            {% else %}
+                <div>推荐者：{{post.writter_name}}</div>
             {% endif %}
+            <div>推荐时间：{{post.date}}</div>
         </div>
         {% if request.session.is_login %}
             <form class="collection_box_1" action="./" method="POST">
@@ -65,46 +73,29 @@
                 <button type='submit' class="{{collection}}" name="collection_update">收藏</button>
             </form>
         {% endif %}
+    </div>
+    <div class="score_box">
+        <div class="avg_score">
+            {% if score.avg_s %}
+                总评分：{{score.avg_s}}
+            {% else %}
+                无评分
+            {% endif %}
+            </div>
+        <div class="user_score">
+            {% if score.user_s %}
+                自评分：{{score.user_s}}
+            {% else %}
+                未评分
+            {% endif %}
+        </div>
         {% if request.session.is_login %}
-            <div class="score_box_2">
-                <div class="avg_score">
-                    {% if score.avg_s %}
-                        总评分：{{score.avg_s}}
-                    {% else %}
-                        无评分
-                    {% endif %}
-                </div>
-                <div class="user_score">
-                    {% if score.user_s %}
-                        自评分：{{score.user_s}}
-                    {% else %}
-                        未评分
-                    {% endif %}
-                </div>
-                <form class="write_score_box" action="./" method="post">
-                    {% csrf_token %}
-                    <label for="score">评分：</label>
-                    <input type="number" name='score' id="score"  min="0" max="10" placeholder="0~10" required>
-                    <button type="submit" name="score_update">提交</button>
-                </form>
-            </div>
-        {% else %}
-            <div class="score_box_1">
-                <div class="avg_score">
-                    {% if score.avg_s %}
-                        总评分：{{score.avg_s}}
-                    {% else %}
-                        无评分
-                    {% endif %}
-                </div>
-                <div class="user_score">
-                    {% if score.user_s %}
-                        自评分：{{score.user_s}}
-                    {% else %}
-                        未评分
-                    {% endif %}
-                </div>
-            </div>
+            <form class="write_score_box" action="./" method="post">
+                {% csrf_token %}
+                <label for="score">评分：</label>
+                <input type="number" name='score' id="score"  min="0" max="10" placeholder="0~10" required>
+                <button type="submit" name="score_update">提交</button>
+            </form>
         {% endif %}
     </div>
     <div class="choose_work_list">
@@ -131,11 +122,15 @@
             </div>
         </form>
     {% endif %}
-    <<div class="comment_list">
+    <div class="comment_list">
         {% for comment in comment_list %}
             <div class="comment-group">
                 <div class="comment-row">
-                    用户：{{comment.user_name}}
+                    {% if comment.writter_id != request.session.user_id and request.session.is_login %}
+                        <a class="write_message_jump" href="/write/message/{{comment.writter_id}}/">用户：{{comment.writter_name}}</a>
+                    {% else %}
+                        用户：{{comment.writter_name}}
+                    {% endif %}
                 </div>
                 <div class="comment-row">
                     {{comment.content}}
@@ -143,7 +138,7 @@
                 <div class="comment-row">
                     时间：{{comment.date}}
                 </div>
-                {% if comment.user_id == request.session.user_id%}
+                {% if comment.writter_id == request.session.user_id%}
                     <form class="comment_delete_box" action="./" method="POST">
                         {% csrf_token %}
                         <input type="number" class="hidden_id" name='delete_id' value="{{comment.id}}">
@@ -156,6 +151,6 @@
                 无评论
             </div>
         {% endfor %}
-    </div>>
+    </div>
 </body>
 </html>

@@ -32,41 +32,33 @@ form.login_box{
     margin-left:14%;
 }
 
-.collection_lists{
+.choose_work_list{
     float:left;
-    height:600px;
-    width:92%;
-    margin-top:6%;
-    margin-left:3%;
-}
-
-.collection_list{
-    float:left;
-    display:inline;
-    height:100%;
-    width:30%;
-    margin-left:2.5%;
+    width:60%;
+    height:440px;
+    margin-top:8%;
+    margin-left:20%;
     border-style:solid;
     border-color:#949494;
     border-width:3px;
 }
 
-.list_title{
+.choose_title{
     width:99%;
     margin-top:0%;
     margin-left:0%;
     padding:5px 3px;
     background-color:#949494;
-    font-size:22px;
+    font-size:18px;
 }
 
-.collection-group{
+.list-group{
     margin-top:1%;
     margin-left:3%;
 }
 
-a.collection_jump{
-    font-size:24px;
+a.list_jump{
+    font-size:32px;
     color:#000000;
     text-decoration:none;
 }

@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>讨论编写页</title>
+    <title>问题重写页</title>
 
-    <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
-    <link rel="stylesheet" type="text/css" href="../../static/css/disscussion.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="../../../static/css/question.css">
 </head>
 <body>
     <div class="top_menu">
@@ -25,15 +25,15 @@
             {% endif %}
         </ul>
     </div>
-    <form class='write_disscussion_box' action="./" method="post">
+    <form class='write_question_box' action="./" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="title">标题：</label><br>
-            <input type="text" class="write_text" name='title' id="title" placeholder="标题" autofocus required>
+            <label for="title">问题：</label><br>
+            <input type="text" class="write_text" name='title' id="title" placeholder="问题" value="{{text.title}}" autofocus required>
         </div>
         <div class="form-group">
-            <label for="content">内容：</label><br>
-            <textarea class="write_textarea_1" name='content' id="content" placeholder="内容" required></textarea>
+            <label for="content">详细内容：</label><br>
+            <textarea class="write_textarea_1" name='content' id="content" placeholder="详细内容" required>{{text.content}}</textarea>
         </div>
         <div class="form-group">
             <button type="submit">提交</button>
